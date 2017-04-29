@@ -1,3 +1,6 @@
+import os
+
+import requests
 import shapefile
 import utm
 from flask import Flask, jsonify
@@ -7,8 +10,10 @@ import maps
 import navigation
 
 app = Flask(__name__)
-pixels = imread('tile.png')
 zoom = 12
+
+api_key = os.getenv('MAPZEN_KEY')
+url = 'https://tile.mapzen.com/mapzen/terrain/v1/terrarium/{}/{}/{}.png'
 
 
 def get_fire_data(filename):
@@ -30,9 +35,24 @@ def get_local_fires(mesh, records):
 sf = get_fire_data('VNP14IMGTDL_NRT_Europe_24h.shp')
 
 
+def download_or_cache_and_read_image(xtile, ytile, zoom):
+    filename = 'cache/{}_{}_{}.png'.format(xtile, ytile, zoom)
+
+    if not os.path.exists(filename):
+        download = requests.get(
+            url.format(zoom, xtile, ytile) + '?api_key=' + api_key)
+
+        with open(filename, 'wb') as file:
+            file.write(download.content)
+
+    return imread(filename)
+
+
 @app.route('/<float:slat>/<float:slong>/<float:elat>/<float:elong>')
 def show_route(slat, slong, elat, elong):
     xtile, ytile = navigation.deg2num(slat, slong, zoom)
+
+    pixels = download_or_cache_and_read_image(xtile, ytile, zoom)
 
     nw = utm.from_latlon(*navigation.num2deg(xtile, ytile, zoom))
     center = utm.from_latlon(*navigation.num2deg(xtile + 0.5, ytile + 0.5, zoom))
