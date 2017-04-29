@@ -1,6 +1,7 @@
 from router.route import Router
 from router.loadOsm import LoadOsm
 import overpass
+import app
 
 def find_path(slat,slon,elat,elon):
     """Returns lat lon path from s to e """
@@ -54,7 +55,30 @@ def get_building_outlines(slat, slon, elat, elon):
         retlist.append(_calc_bb(points))
     return retlist
 
-get_building_outlines(51.763635, 8.065624, 51.754994, 8.045626)
+
+def get_roads(slat, slon, elat, elon):
+    minlat = str(min(slat, elat))
+    maxlat = str(max(slat, elat))
+    minlon = str(min(slon, elon))
+    maxlon = str(max(slon, elon))
+    req = "way[highway~'.']("+minlat+","+minlon+","+maxlat+","+maxlon+");"
+    #pre sort
+    roads = []
+    api = overpass.API()
+    response = api.Get(req)
+    for feat in response['features']:
+        road = {}
+        if feat['geometry']['type'] != 'LineString':
+            pass
+        else:
+            road['points'] = feat['geometry']['coordinates']
+        roads.append(road)
+    return roads
+
+
+
+#get_building_outlines(51.763635, 8.065624, 51.754994, 8.045626)
+get_roads(51.763635, 8.065624, 51.754994, 8.045626)
 
 
 

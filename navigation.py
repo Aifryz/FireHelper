@@ -1,8 +1,8 @@
 import math
-
+import osm
 import numpy as np
 from simpleai.search import SearchProblem, astar
-
+from bresenham import bresenham
 
 class ShortestPathProblem(SearchProblem):
     def __init__(self, matrix, start, goal):
@@ -87,6 +87,28 @@ def fires_to_weights(mesh, fires):
 
         matrix[y-delta:y+delta, x-delta:x+delta] += fire_weight
 
+    return matrix
+
+
+def _add_segment(mesh,matrix, seg):
+    road_weight = -10
+    points = bresenham(*seg)
+    for pt in points:
+        matrix[pt[1],pt[0]] += road_weight
+
+
+def roads_to_weights(mesh, roads, zoom):
+
+    matrix = np.zeros(mesh.matrix.shape)
+
+    for road in roads:
+        points = road['points']
+        xbeg, ybeg = deg2num(points[0][0], points[0][1], zoom)
+
+        for i in xrange(1, len(points)):
+            xend, yend = deg2num(points[i][0], points[i][1], zoom)
+            _add_segment(mesh, matrix, (xbeg, ybeg, xend, yend))
+            xbeg, ybeg = deg2num(points[i][0], points[i][1], zoom)
     return matrix
 
 

@@ -8,6 +8,7 @@ from skimage.io import imread
 
 import maps
 import navigation
+import osm
 
 app = Flask(__name__)
 zoom = 12
@@ -66,6 +67,10 @@ def show_route(slat, slong, elat, elong):
     local_fires = get_local_fires(mesh, sf.records())
 
     weights_fires = navigation.fires_to_weights(mesh, local_fires)
+
+    roads = osm.get_roads(slat, slong, elat, elong)
+    weights_roads = navigation.roads_to_weights(mesh, roads, zoom)
+
     weights_combined = weights_height + weights_fires
 
     path = navigation.Pathfinder(weights_combined).find_path(start_coord,
