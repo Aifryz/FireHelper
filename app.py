@@ -68,8 +68,8 @@ def show_route(slat, slong, elat, elong):
 
     weights_fires = navigation.fires_to_weights(mesh, local_fires)
 
-    roads = osm.get_roads(slat, slong, elat, elong)
-    weights_roads = navigation.roads_to_weights(mesh, roads, zoom)
+    roads = None
+    weights_roads = navigation.roads_to_weights(mesh, roads)
 
     weights_combined = weights_height + weights_fires
 
@@ -86,3 +86,29 @@ def show_route(slat, slong, elat, elong):
     }
 
     return jsonify(**data)
+
+slat = 51.693007
+slong =8.752484
+elat= 51.701799
+elong=8.733623
+
+xtile, ytile = navigation.deg2num(slat, slong, zoom)
+
+pixels = download_or_cache_and_read_image(xtile, ytile, zoom)
+
+nw = utm.from_latlon(*navigation.num2deg(xtile, ytile, zoom))
+center = utm.from_latlon(*navigation.num2deg(xtile + 0.5, ytile + 0.5, zoom))
+
+mesh = maps.Mesh(pixels, nw, center)
+weights_height = navigation.heights_to_weights(mesh.get_heights())
+
+start_coord = mesh.get_pixel_coord(utm.from_latlon(slat, slong))
+end_coord = mesh.get_pixel_coord(utm.from_latlon(elat, elong))
+
+local_fires = get_local_fires(mesh, sf.records())
+
+weights_fires = navigation.fires_to_weights(mesh, local_fires)
+
+roads = osm.get_roads(slat,slong,elat,elong)
+weights_roads = navigation.roads_to_weights(mesh, roads)
+print('')

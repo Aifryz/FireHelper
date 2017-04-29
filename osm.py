@@ -1,7 +1,6 @@
 from router.route import Router
 from router.loadOsm import LoadOsm
 import overpass
-import app
 
 def find_path(slat,slon,elat,elon):
     """Returns lat lon path from s to e """
