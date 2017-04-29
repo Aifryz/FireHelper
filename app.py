@@ -72,7 +72,11 @@ def show_route(slat, slong, elat, elong):
                                                              end_coord).path()
 
     data = {
-        'fires': [utm.to_latlon(*x) for x in local_fires],
+        'fires': [
+            {
+                'radius': navigation.get_fire_radius(),
+                'coords': utm.to_latlon(*x)
+            } for x in local_fires],
         'path': [utm.to_latlon(*mesh.get_world_coords(*segment)) for _, segment in path]
     }
 

@@ -66,6 +66,11 @@ def heights_to_weights(matrix):
     return np.sqrt(gradient[0] ** 2 + gradient[1] ** 2)
 
 
+def get_fire_radius():
+    """Returns the fire radius in metres"""
+    return 720 / 2
+
+
 def fires_to_weights(mesh, fires):
     """
     Returns the weights matrix with fire point weights increased 
@@ -78,7 +83,7 @@ def fires_to_weights(mesh, fires):
 
     for fire in fires:
         x, y = (int(x) for x in mesh.get_pixel_coord(fire))
-        delta = int(mesh.metres_to_pixels(750))
+        delta = int(mesh.metres_to_pixels(get_fire_radius() * 2))
 
         matrix[y-delta:y+delta, x-delta:x+delta] += fire_weight
 
