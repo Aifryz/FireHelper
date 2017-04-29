@@ -26,6 +26,12 @@ class ShortestPathProblem(SearchProblem):
                 if x == 0 and y == 0:
                     continue
 
+                if 0 > state[0] + x >= self.matrix.shape[0]:
+                    continue
+
+                if 0 > state[1] + y >= self.matrix.shape[1]:
+                    continue
+
                 actions.append((x, y))
 
         return actions
