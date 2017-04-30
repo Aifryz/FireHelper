@@ -65,7 +65,7 @@ def get_users():
                     continue
                 users[(row[0], row[1])] = 1
     data = {
-        'users': [[key[0], key[1]] for key, value in users.items()]
+        'users': [[float(key[0]), float(key[1])] for key, value in users.items()]
     }
 
     return jsonify(**data)
