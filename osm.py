@@ -49,7 +49,7 @@ def get_building_outlines(slat, slon, elat, elon):
     minlon = str(min(slon, elon))
     maxlon = str(max(slon, elon))
     req = "way[building~'.'](" + minlat + "," + minlon + \
-        "," + maxlat + "," + maxlon + roads = osm.get_roads(slat, slong, elat, elong) ");"
+        "," + maxlat + "," + maxlon +");"
     api = overpass.API()
     response = api.Get(req)
     retlist = []
