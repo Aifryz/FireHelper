@@ -5,6 +5,7 @@ from simpleai.search import SearchProblem, astar
 from bresenham import bresenham
 import utm
 
+
 class ShortestPathProblem(SearchProblem):
     def __init__(self, matrix, start, goal):
         self.matrix = matrix
@@ -86,20 +87,29 @@ def fires_to_weights(mesh, fires):
         x, y = (int(x) for x in mesh.get_pixel_coord(fire))
         delta = int(mesh.metres_to_pixels(get_fire_radius() * 2))
 
-        matrix[y-delta:y+delta, x-delta:x+delta] += fire_weight
+        matrix[y - delta:y + delta, x - delta:x + delta] += fire_weight
 
     return matrix
 
 
-ROAD_WEIGHT = -2
-
-
-def _add_segment(mesh, matrix, seg):
+def _add_segment(mesh, matrix, seg, weigh):
 
     points = bresenham(int(seg[0][0]), int(
         seg[0][1]), int(seg[1][0]), int(seg[1][1]))
     for pt in points:
-        matrix[pt[1], pt[0]] += ROAD_WEIGHT
+        matrix[pt[1], pt[0]] = min(matrix[pt[1], pt[0]], weigh)
+
+
+def _get_road_weigh(typ):
+    weighs = {'motorway': 0,
+              'trunk': -0.5,
+              'primary': -1,
+              'secondary': -2,
+              'tertriary': -2,
+              'unclassified': -2,
+              'residential': -1.5,
+              'service': -1,}
+    return weighs.get(typ, -2)
 
 
 def roads_to_weights(mesh, roads):
@@ -114,11 +124,11 @@ def roads_to_weights(mesh, roads):
         for i in range(1, len(points)):
             end = mesh.get_pixel_coord(
                 utm.from_latlon(points[i][1], points[i][0]))
-            _add_segment(mesh, matrix, (beg, end))
+            _add_segment(mesh, matrix, (beg, end), _get_road_weigh(road['type']))
             beg = mesh.get_pixel_coord(
                 utm.from_latlon(points[i][1], points[i][0]))
     mat = np.zeros(mesh.matrix.shape)
-    mat.fill(-ROAD_WEIGHT * 2)
+    mat.fill(4)
     weighs = np.clip(matrix, ROAD_WEIGHT, 0)
     return mat + weighs
 

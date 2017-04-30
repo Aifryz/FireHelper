@@ -58,5 +58,6 @@ def get_roads(slat, slon, elat, elon):
             pass
         else:
             road['points'] = feat['geometry']['coordinates']
+            road['type'] = feat['properties']['highway']
         roads.append(road)
     return roads
