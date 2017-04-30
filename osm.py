@@ -1,22 +1,4 @@
-from router.route import Router
-from router.loadOsm import LoadOsm
 import overpass
-
-
-def find_path(slat, slon, elat, elon):
-    """Returns lat lon path from s to e """
-    data = LoadOsm("foot")
-    node1 = data.findNode(slat, slon)
-    node2 = data.findNode(elat, elon)
-    router = Router(data)
-    result, route = router.doRoute(node1, node2)
-    retlist = []
-    if result == 'success':
-        # list the lat/long
-        for i in route:
-            node = data.rnodes[i]
-            retlist.append((node[0], node[1]))
-    return retlist
 
 
 def _calc_bb(points):
@@ -49,7 +31,7 @@ def get_building_outlines(slat, slon, elat, elon):
     minlon = str(min(slon, elon))
     maxlon = str(max(slon, elon))
     req = "way[building~'.'](" + minlat + "," + minlon + \
-        "," + maxlat + "," + maxlon +");"
+        "," + maxlat + "," + maxlon + ");"
     api = overpass.API()
     response = api.Get(req)
     retlist = []
