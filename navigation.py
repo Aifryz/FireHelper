@@ -111,7 +111,7 @@ def roads_to_weights(mesh, roads):
         p0 = points[0]
         beg = mesh.get_pixel_coord(utm.from_latlon(p0[1], p0[0]))
 
-        for i in xrange(1, len(points)):
+        for i in range(1, len(points)):
             end = mesh.get_pixel_coord(
                 utm.from_latlon(points[i][1], points[i][0]))
             _add_segment(mesh, matrix, (beg, end))
