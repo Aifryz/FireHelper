@@ -65,6 +65,11 @@ def show_route(slat, slong, elat, elong):
     end_coord = mesh.get_pixel_coord(utm.from_latlon(elat, elong))
 
     local_fires = get_local_fires(mesh, sf.records())
+    #dummy fire
+    utm_pos = utm.from_latlon(51.7672075 , 8.0586724)
+
+    if mesh.within_bounds(utm_pos):
+        local_fires.add(utm_pos)
 
     weights_fires = navigation.fires_to_weights(mesh, local_fires)
 
@@ -84,4 +89,5 @@ def show_route(slat, slong, elat, elong):
             } for x in local_fires],
         'path': [utm.to_latlon(*mesh.get_world_coords(*segment)) for _, segment in path]
     }
+
     return jsonify(**data)
