@@ -103,13 +103,13 @@ def _add_segment(mesh, matrix, seg, weigh):
 def _get_road_weigh(typ):
     weighs = {'motorway': 0,
               'trunk': -0.5,
-              'primary': -1,
+              'primary': -1.5,
               'secondary': -2,
               'tertriary': -2,
               'unclassified': -2,
-              'residential': -1.5,
+              'residential': -1,
               'service': -1,}
-    return weighs.get(typ, -2)
+    return weighs.get(typ, -1)
 
 
 def roads_to_weights(mesh, roads):
@@ -129,7 +129,7 @@ def roads_to_weights(mesh, roads):
                 utm.from_latlon(points[i][1], points[i][0]))
     mat = np.zeros(mesh.matrix.shape)
     mat.fill(4)
-    weighs = np.clip(matrix, ROAD_WEIGHT, 0)
+    weighs = np.clip(matrix, -2, 0)
     return mat + weighs
 
 
