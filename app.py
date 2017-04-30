@@ -68,7 +68,7 @@ def show_route(slat, slong, elat, elong):
 
     weights_fires = navigation.fires_to_weights(mesh, local_fires)
 
-    roads = osm.get_roads(slat,slong,elat,elong)
+    roads = osm.get_roads(slat, slong, elat, elong)
     weights_roads = navigation.roads_to_weights(mesh, roads)
 
     weights_combined = weights_height + weights_fires+weights_roads

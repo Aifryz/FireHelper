@@ -2,7 +2,8 @@ from router.route import Router
 from router.loadOsm import LoadOsm
 import overpass
 
-def find_path(slat,slon,elat,elon):
+
+def find_path(slat, slon, elat, elon):
     """Returns lat lon path from s to e """
     data = LoadOsm("foot")
     node1 = data.findNode(slat, slon)
@@ -16,6 +17,7 @@ def find_path(slat,slon,elat,elon):
             node = data.rnodes[i]
             retlist.append((node[0], node[1]))
     return retlist
+
 
 def _calc_bb(points):
     minlat = points[0][0]
@@ -36,6 +38,7 @@ def _calc_bb(points):
             maxlon = lon
     return (minlat, maxlat, minlon, maxlon)
 
+
 def get_building_outlines(slat, slon, elat, elon):
     """Finds building outlines in 'rectangle' constructed with given bounding box
        Returns array of tuples of 4 coords (minlat,maxlat,minlon,maxlon)
@@ -45,7 +48,8 @@ def get_building_outlines(slat, slon, elat, elon):
     maxlat = str(max(slat, elat))
     minlon = str(min(slon, elon))
     maxlon = str(max(slon, elon))
-    req = "way[building~'.']("+minlat+","+minlon+","+maxlat+","+maxlon+");"
+    req = "way[building~'.'](" + minlat + "," + minlon + \
+        "," + maxlat + "," + maxlon + roads = osm.get_roads(slat, slong, elat, elong) ");"
     api = overpass.API()
     response = api.Get(req)
     retlist = []
@@ -60,8 +64,9 @@ def get_roads(slat, slon, elat, elon):
     maxlat = str(max(slat, elat))
     minlon = str(min(slon, elon))
     maxlon = str(max(slon, elon))
-    req = "way[highway~'.']("+minlat+","+minlon+","+maxlat+","+maxlon+");"
-    #pre sort
+    req = "way[highway~'.'](" + minlat + "," + minlon + \
+        "," + maxlat + "," + maxlon + ");"
+    # pre sort
     roads = []
     api = overpass.API()
     response = api.Get(req)
@@ -73,12 +78,3 @@ def get_roads(slat, slon, elat, elon):
             road['points'] = feat['geometry']['coordinates']
         roads.append(road)
     return roads
-
-
-
-#get_building_outlines(51.763635, 8.065624, 51.754994, 8.045626)
-get_roads(51.763635, 8.065624, 51.754994, 8.045626)
-
-
-
-
