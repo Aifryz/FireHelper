@@ -1,0 +1,39 @@
+<html>
+<head>
+    <title>FireHelper</title>
+    {{map.js}}
+    <link rel="stylesheet" type="text/css" href="static/style.css">
+</head>
+<body>
+
+<div id="wraper">
+    <div class="lefter">
+            <img src="static/images/logo.png">
+            <ul>
+                <li>Active dangers : <font color="red">{{count}}</font></li>
+                <li>People in danger : <font color="red">{{countp}}</font></li>
+                <li>People near danger : <font color="red">{{countpn}}</font></li>
+            </ul>
+            <div class="goto">
+                <select name="list" form="form">
+                    {% for i in range(count) %}
+                    <option title="{{i}}" value="{{i}}">{{datacity[i]}}</option>
+                    {% endfor %}
+                </select>
+
+                <form action="{{ url_for('set') }}" id="form" method="post">
+                    <input type="submit" class="btn" value="Go to fire">
+                </form>
+            </div>
+    </div>
+    <div class="container">
+        <div class="map">
+            {{map.html}}
+        </div>
+    </div>
+    <div class="footer">
+
+    </div>
+</div>
+</body>
+</html>
