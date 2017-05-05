@@ -6,7 +6,7 @@ import requests, json
 
 app = Flask(__name__, template_folder=".")
 GoogleMaps(app)
-gmaps = googlemaps.Client(key='AIzaSyBs23cMxyiLKFAM2XZMA7s13hSJJJMqriQ')
+gmaps = googlemaps.Client(key='APIKEY')
 jsonget = requests.get('http://127.0.0.1/')
 data = json.loads(jsonget.content)
 
