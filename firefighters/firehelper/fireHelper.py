@@ -69,8 +69,8 @@ def mapview():
 def set():
     name=request.form['list']
     global lon, lan
-    lan=data["fires"][int(name)-1]["coords"][0]
-    lon=data["fires"][int(name)-1]["coords"][1]
+    lan=data["fires"][int(name)]["coords"][0]
+    lon=data["fires"][int(name)]["coords"][1]
     return redirect(url_for('mapview'))
 
 if __name__ == "__main__":
